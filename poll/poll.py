@@ -79,6 +79,12 @@ class PollBase(XBlock, ResourceMixin, PublishEventMixin):
     )
     feedback = String(default='', help="Text to display after the user votes.")
 
+    has_score = True
+    weight = 1.0
+
+    def max_score(self):
+        return self.weight
+
     def send_vote_event(self, choice_data):
         # Let the LMS know the user has answered the poll.
         self.runtime.publish(self, 'progress', {})
