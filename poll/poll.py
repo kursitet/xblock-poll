@@ -241,7 +241,7 @@ class PollBlock(PollBase):
     tally = Dict(default={'R': 0, 'B': 0, 'G': 0, 'O': 0},
                  scope=Scope.user_state_summary,
                  help=u"Полный набор ответов от студентов.")
-    choice = String(scope=Scope.user_state, help="Ответ студента")
+    choice = String(scope=Scope.user_state, help=u"Ответ студента")
     event_namespace = 'xblock.poll'
 
     def clean_tally(self):
