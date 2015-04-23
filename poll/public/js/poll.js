@@ -130,9 +130,9 @@ function PollUtil (runtime, element, pollType) {
             thanks.fadeOut(0).fadeIn('slow', 'swing');
             $('.poll-feedback-container', element).removeClass('poll-hidden');
             if (can_vote) {
-                $('button[name="poll-submit"]', element).html('Заново отправить');
+                $('input[name="poll-submit"]', element).val('Заново отправить');
             } else {
-                $('button', element).attr('disabled', true)
+                $('input', element).attr('disabled', true)
             }
             return;
         }

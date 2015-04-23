@@ -31,7 +31,7 @@
             </tr>
         {% endfor %}
         </table>
-        <button class="input-main" type="submit" name="poll-submit" value="{% if choices and can_vote %}Resubmit{% else %}Submit{% endif %}" disabled>{% if choices and can_vote %}Заново отправить{% else %}Отправить{% endif %}</button>
+        <input class="input-main" type="button" name="poll-submit" value="{% if choices and can_vote %}Заново отправить{% else %}Отправить{% endif %}" disabled />
     </form>
     <div class="poll-voting-thanks{% if not choices or can_vote %} poll-hidden{% endif %}"><span>Спасибо за ваше мнение!</span></div>
     <div class="poll-submissions-count poll-hidden">
