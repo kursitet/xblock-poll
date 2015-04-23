@@ -72,12 +72,12 @@ class PollBase(XBlock, ResourceMixin, PublishEventMixin):
     Base class for Poll-like XBlocks.
     """
     event_namespace = 'xblock.pollbase'
-    private_results = Boolean(default=False, help="Whether or not to display results to the user.")
-    max_submissions = Integer(default=1, help="The maximum number of times a user may send a submission.")
+    private_results = Boolean(default=False, help=u"Показывать ли студенту результаты.")
+    max_submissions = Integer(default=1, help=u"Максимальное допустимое количество отправок ответов одним студентом.")
     submissions_count = Integer(
-        default=0, help="Number of times the user has sent a submission.", scope=Scope.user_state
+        default=0, help=u"Сколько раз студент отправил свои ответы.", scope=Scope.user_state
     )
-    feedback = String(default='', help="Text to display after the user votes.")
+    feedback = String(default='', help=u"Текст, показываемый студенту, после того, как он отправил свои ответы.")
 
     has_score = True
     weight = 1.0
@@ -213,12 +213,12 @@ class PollBase(XBlock, ResourceMixin, PublishEventMixin):
         except (ValueError, KeyError):
             max_submissions = 1
             result['success'] = False
-            result['errors'].append('Maximum Submissions missing or not an integer.')
+            result['errors'].append(u'Параметр "Максимальное Количество Отправок" отсутствует или не является целым числом.')
 
         # Better to send an error than to confuse the user by thinking this would work.
         if (max_submissions != 1) and not private_results:
             result['success'] = False
-            result['errors'].append("Private results may not be False when Maximum Submissions is not 1.")
+            result['errors'].append(u'Параметр "Скрыть результаты" не может быть False если "Максимальное Количество Отправок" не равно 1.')
         return max_submissions
 
 
@@ -236,12 +236,12 @@ class PollBlock(PollBase):
     answers = List(
         default=(('R', {'label': 'Red', 'img': None}), ('B', {'label': 'Blue', 'img': None}),
                  ('G', {'label': 'Green', 'img': None}), ('O', {'label': 'Other', 'img': None})),
-        scope=Scope.settings, help="The answer options on this poll."
+        scope=Scope.settings, help=u"Варианты ответов в этом Опросе."
     )
     tally = Dict(default={'R': 0, 'B': 0, 'G': 0, 'O': 0},
                  scope=Scope.user_state_summary,
-                 help="Total tally of answers from students.")
-    choice = String(scope=Scope.user_state, help="The student's answer")
+                 help=u"Полный набор ответов от студентов.")
+    choice = String(scope=Scope.user_state, help="Ответ студента")
     event_namespace = 'xblock.poll'
 
     def clean_tally(self):
@@ -403,7 +403,7 @@ class PollBlock(PollBase):
         result = {'success': False, 'errors': []}
         old_choice = self.get_choice()
         if (old_choice is not None) and not self.private_results:
-            result['errors'].append('You have already voted in this poll.')
+            result['errors'].append(u'Вы уже отвечали на этот опрос.')
             return result
         try:
             choice = data['choice']
@@ -422,7 +422,7 @@ class PollBlock(PollBase):
             self.submissions_count = 0
 
         if not self.can_vote():
-            result['errors'].append('You have already voted as many times as you are allowed.')
+            result['errors'].append(u'Вы уже использовали максимальное количество попыток для ответа')
             return result
 
         self.clean_tally()
@@ -452,7 +452,7 @@ class PollBlock(PollBase):
 
         display_name = data.get('display_name', '').strip()
         if not question:
-            result['errors'].append("You must specify a question.")
+            result['errors'].append(u"Необходимо задать вопрос.")
             result['success'] = False
 
         answers = self.gather_items(data, result, 'Answer', 'answers')
@@ -506,7 +506,7 @@ class SurveyBlock(PollBase):
         default=(
             ('Y', 'Yes'), ('N', 'No'),
             ('M', 'Maybe')),
-        scope=Scope.settings, help="Answer choices for this Survey"
+        scope=Scope.settings, help=u"Варианты ответа для данной Анкеты"
     )
     questions = List(
         default=(
@@ -514,16 +514,16 @@ class SurveyBlock(PollBase):
             ('recommend', {'label': 'Would you recommend this course to your friends?', 'img': None}),
             ('learn', {'label': 'Do you think you will learn a lot?', 'img': None})
         ),
-        scope=Scope.settings, help="Questions for this Survey"
+        scope=Scope.settings, help=u"Вопросы для данной Анкеты"
     )
     tally = Dict(
         default={
             'enjoy': {'Y': 0, 'N': 0, 'M': 0}, 'recommend': {'Y': 0, 'N': 0, 'M': 0},
             'learn': {'Y': 0, 'N': 0, 'M': 0}},
         scope=Scope.user_state_summary,
-        help="Total tally of answers from students."
+        help=u"Полный набор ответов от студентов."
     )
-    choices = Dict(help="The user's answers", scope=Scope.user_state)
+    choices = Dict(help="Ответы студента", scope=Scope.user_state)
     event_namespace = 'xblock.survey'
 
     def student_view(self, context=None):
@@ -754,7 +754,7 @@ class SurveyBlock(PollBase):
         choices = self.get_choices()
         if choices and not self.private_results:
             result['success'] = False
-            result['errors'].append("You have already voted in this poll.")
+            result['errors'].append(u"Вы уже отвечали на этот опрос.")
 
         if not choices:
             # Reset submissions count if choices are bogus.
@@ -762,7 +762,7 @@ class SurveyBlock(PollBase):
 
         if not self.can_vote():
             result['success'] = False
-            result['errors'].append('You have already voted as many times as you are allowed.')
+            result['errors'].append(u'Вы уже использовали максимальное количество попыток для ответа.')
 
         # Make sure the user has included all questions, and hasn't included
         # anything extra, which might indicate the questions have changed.

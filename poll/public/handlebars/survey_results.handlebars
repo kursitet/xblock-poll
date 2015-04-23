@@ -25,11 +25,11 @@
             </tr>
         {{/each}}
     </table>
-    <input class="input-main" type="button" name="poll-submit" value="Submit" disabled>
-    <div class="poll-footnote">Results gathered from {{total}} respondent{{#if plural}}s{{/if}}.</div>
+    <button class="input-main" type="submit" name="poll-submit" value="Submit" disabled>Отправить</button>
+    <div class="poll-footnote">Собраны ответы {{total}} респондентов.</div>
     {{#if feedback}}
         <hr />
-        <h3 class="poll-header">Feedback</h3>
+        <h3 class="poll-header">Отзыв</h3>
         <div class="poll-feedback">
             {{{feedback}}}
         </div>

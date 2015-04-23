@@ -5,7 +5,7 @@
         <label class="label setting-label poll-setting-label" for="{{noun}}-label-{{key}}">{{noun}}</label>
         <input class="input setting-input" name="{{noun}}-label-{{key}}" id="{{noun}}-label-{{key}}" value="{{text}}" type="text" /><br />
         {{#if image}}
-        <label class="label setting-label" for="{{noun}}-img-{{key}}">Image URL</label>
+        <label class="label setting-label" for="{{noun}}-img-{{key}}">Ссылка на изображение</label>
         <input class="input setting-input" name="{{noun}}-img-{{key}}" id="{{noun}}-img-{{key}}" value="{{img}}" type="text" />
         {{/if}}
         <div class="poll-move">
@@ -14,9 +14,9 @@
         </div>
     </div>
     <span class="tip setting-help">
-        {{#if image}}This must have an image URL or text, and can have both.{{/if}}
+        {{#if image}}Здесь должна быть ссылка на изображение или текст. Можно и то и другое сразу.{{/if}}
     </span>
-    <a href="#" class="button action-button poll-delete-answer" onclick="return false;">Delete</a>
+    <a href="#" class="button action-button poll-delete-answer" onclick="return false;">Удалить</a>
 </li>
 {{/each}}
 </script>

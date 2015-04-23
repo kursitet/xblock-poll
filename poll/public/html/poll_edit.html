@@ -4,35 +4,35 @@
     <ul class="list-input settings-list" id="poll-line-items">
         <li class="field comp-setting-entry is-set">
             <div class="wrapper-comp-setting">
-                <label class="label setting-label poll-setting-label" for="poll-display-name">Display Name</label>
+                <label class="label setting-label poll-setting-label" for="poll-display-name">Название</label>
                 <!-- In the case of surveys, this field will actually be used for block_name. -->
                 <input class="input setting-input" name="display_name" id="poll-display-name" value="{{ display_name }}" type="text" />
             </div>
         </li>
         {% if not multiquestion %}
             <li class="field comp-setting-entry is-set">
-              <h2><label for="poll-question-editor">Question/Prompt</label></h2>
-              <a href="//daringfireball.net/projects/markdown/syntax" target="_blank">Markdown Syntax</a> is supported.
+              <h2><label for="poll-question-editor">Вопрос/Подсказка</label></h2>
+              Поддерживается синтаксис <a href="//daringfireball.net/projects/markdown/syntax" target="_blank">Markdown</a>.
               <div id="poll-question-editor-container">
                 <textarea class="input setting-input" name="question" id="poll-question-editor">{{question}}</textarea>
               </div>
-              <span class="tip setting-help">Enter the prompt for the user.</span>
+              <span class="tip setting-help">Введите подсказку для студента.</span>
             </li>
         {% endif %}
         <li class="field comp-setting-entry is-set">
-           <h2><label for="poll-feedback-editor">Feedback</label></h2>
-           <a href="//daringfireball.net/projects/markdown/syntax" target="_blank">Markdown Syntax</a> is supported.
+           <h2><label for="poll-feedback-editor">Отзыв</label></h2>
+           Поддерживается синтаксис <a href="//daringfireball.net/projects/markdown/syntax" target="_blank">Markdown</a>.
            <div id="poll-feedback-editor-container">
              <textarea class="input setting-input" name="feedback" id="poll-feedback-editor">{{feedback}}</textarea>
            </div>
             <span class="tip setting-help">
-                This text will be displayed for the user as some extra feedback after they have
-                submitted their response to the poll.
+                Студенты увидят этот текст как некое дополнительное сообщение
+                после прохождения опроса.
             </span>
         </li>
         <li class="field comp-setting-entry is-set">
             <div class="wrapper-comp-setting">
-                <label class="label setting-label poll-setting-label" for="poll-private-results">Private Results</label>
+                <label class="label setting-label poll-setting-label" for="poll-private-results">Скрыть результаты</label>
                 <select id="poll-private-results" class="input setting-input" name="private_results">
                     <!-- So far as I can see, there's not a proper style for checkboxes. LTI module does it this way. -->
                     <option value="true" {% if private_results %} selected{% endif %}>True</option>
@@ -40,32 +40,33 @@
                 </select>
             </div>
             <span class="tip setting-help">
-                If this is set True, don't display results of the poll to the user.
+                Если здесь стоит True, студент не увидит результатов опроса.
             </span>
         </li>
         <li class="field comp-setting-entry is-set">
             <div class="wrapper-comp-setting">
-                <label class="label setting-label poll-setting-label" for="poll-max-submissions">Maximum Submissions</label>
+                <label class="label setting-label poll-setting-label" for="poll-max-submissions">Максимальное Количество Отправок</label>
                 <input id="poll-max-submissions" type="number" min="0" step="1" value="{{ max_submissions }}"/>
             </div>
             <span class="tip setting-help">
-                Maximum number of times a user may submit a poll. <strong>Setting this to a value other than 1 will imply that
-                'Private Results' should be true.</strong> Setting it to 0 will allow infinite resubmissions.
+                Максимальное количество раз, которое один студент может ответить на этот опрос.
+                <strong>Внимание: Если это число больше 1, оно подразумевает что параметр "Скрыть результаты" должен быть True.</strong>
+                Установка этого параметра в 0 позволит студенту отвечать на опрос неограниченное количество раз.
             </span>
         </li>
         <li class="field comp-setting-entry is-set">
             <p>
-                <strong>Notes:</strong>
-                If you change an answer's text, all students who voted for that choice will have their votes updated to
-                the new text. You'll want to avoid changing an answer from something like 'True' to 'False', accordingly.
-                If you delete an answer, any votes for that answer will also be deleted. Students whose choices are deleted
-                may vote again, but will not lose course progress.
+                <strong>Внимание:</strong>
+                Если вы измените текст ответа, он изменится также и в отправках студентов, которые выбрали этот вариант ответа.
+                Избегайте кардинальных изменений в ответах, например, замены 'Да' на 'Нет'.
+                Если вы удалите ответ, также будут удалены и все голоса за данный ответ. Студенты, который выбрали данный ответ в своей отправке
+                могут заново пройти опрос без потери прогресса за курс.
             </p>
             {%  if multiquestion %}
                 <p>
-                    Questions must be similarly cared for. If a question's text is changed, any votes for that question will remain.
-                    If a question is deleted, any student who previously took the survey will be permitted to retake it, but will not
-                    lose course progress.
+                    С вопросами следует соблюдать такую же осторожность. Если текст вопроса изменится, поданные на него ответы
+                    останутся без изменений. Если вопрос будет удален, студенты, участвовавшие в опросе ранее смогут ответить на него еще 
+                    раз, без потери прогресса за курс.
                 </p>
             {% endif %}
         </li>
@@ -77,18 +78,18 @@
     <div class="xblock-actions">
         <ul>
             <li class="action-item" id="poll-add-answer">
-                <a href="#" class="button action-button" class="poll-add-item-link" onclick="return false;">Add Answer</a>
+                <a href="#" class="button action-button" class="poll-add-item-link" onclick="return false;">Добавить Ответ</a>
             </li>
             {% if multiquestion %}
                 <li class="action-item" id="poll-add-question">
-                    <a href="#" class="button action-button" class="poll-add-item-link" onclick="return false;">Add Question</a>
+                    <a href="#" class="button action-button" class="poll-add-item-link" onclick="return false;">Добавить Вопрос</a>
                 </li>
             {% endif %}
             <li class="action-item">
-                <input id="poll-submit-options" type="submit" class="button action-primary save-button" value="Save" onclick="return false;" />
+                <button id="poll-submit-options" type="submit" class="button action-primary save-button" value="Save" onclick="return false;">Сохранить</button>
             </li>
             <li class="action-item">
-                <a href="#" class="button cancel-button">Cancel</a>
+                <a href="#" class="button cancel-button">Отменить</a>
             </li>
         </ul>
     </div>
