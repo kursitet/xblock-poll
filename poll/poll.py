@@ -193,9 +193,13 @@ class PollBase(XBlock, ResourceMixin, PublishEventMixin):
         Checks to see if the user has permissions to view private results.
         This only works inside the LMS.
         """
-        if HAS_EDX_ACCESS and hasattr(self.runtime, 'user') and hasattr(self.runtime, 'course_id'):
-            # Course staff users have permission to view results.
-            if has_access(self.runtime.user, 'staff', self, self.runtime.course_id):
+        #if HAS_EDX_ACCESS and hasattr(self.runtime, 'user') and hasattr(self.runtime, 'course_id'):
+        #    # Course staff users have permission to view results.
+        #    if has_access(self.runtime.user, 'staff', self, self.runtime.course_id):
+        # Mihara: I'm not sure why, but this whole logic plain doesn't work. Where did they run this?
+        # I'm falling back to what I know does work...
+        if HAS_EDX_ACCESS:
+            if self.xmodule_runtime.get_user_role() in ['staff', 'instructor']:
                 return True
             else:
                 # Check if user is member of a group that is explicitly granted
