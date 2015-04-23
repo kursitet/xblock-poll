@@ -24,7 +24,7 @@
           </li>
       {% endfor %}
       </ul>
-      <input class="input-main" type="submit" name="poll-submit" value="{% if choice %}Заново отправить{% else %}Отправить{% endif %}" disabled />
+      <input class="input-main" type="button" name="poll-submit" value="{% if choice %}Заново отправить{% else %}Отправить{% endif %}" disabled />
   </form>
   <div class="poll-voting-thanks{% if not choice or can_vote %} poll-hidden{% endif %}"><span>Спасибо за ваше мнение!</span></div>
   <div class="poll-submissions-count poll-hidden">
