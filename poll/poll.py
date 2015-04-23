@@ -35,12 +35,17 @@ from xblockutils.publish_event import PublishEventMixin
 from xblockutils.resources import ResourceLoader
 
 HAS_EDX_ACCESS = False
+HAS_API_MANAGER = False
 try:
     # pylint: disable=import-error
     from django.conf import settings
     from courseware.access import has_access
-    from api_manager.models import GroupProfile
     HAS_EDX_ACCESS = True
+    try:
+        from api_manager.models import GroupProfile
+        HAS_API_MANAGER = True
+    except ImportError:
+        pass
 except ImportError:
     pass
 
@@ -194,12 +199,12 @@ class PollBase(XBlock, ResourceMixin, PublishEventMixin):
             else:
                 # Check if user is member of a group that is explicitly granted
                 # permission to view the results through django configuration.
-                group_names = getattr(settings, 'XBLOCK_POLL_EXTRA_VIEW_GROUPS', [])
-                if group_names:
-                    group_ids = self.runtime.user.groups.values_list('id', flat=True)
-                    return GroupProfile.objects.filter(group_id__in=group_ids, name__in=group_names).exists()
-        else:
-            return False
+                if HAS_API_MANAGER:
+                    group_names = getattr(settings, 'XBLOCK_POLL_EXTRA_VIEW_GROUPS', [])
+                    if group_names:
+                        group_ids = self.runtime.user.groups.values_list('id', flat=True)
+                        return GroupProfile.objects.filter(group_id__in=group_ids, name__in=group_names).exists()
+        return False
 
     @staticmethod
     def get_max_submissions(data, result, private_results):
