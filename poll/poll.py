@@ -35,17 +35,18 @@ from xblockutils.publish_event import PublishEventMixin
 from xblockutils.resources import ResourceLoader
 
 HAS_EDX_ACCESS = False
-HAS_API_MANAGER = False
 try:
     # pylint: disable=import-error
     from django.conf import settings
     from courseware.access import has_access
     HAS_EDX_ACCESS = True
-    try:
-        from api_manager.models import GroupProfile
-        HAS_API_MANAGER = True
-    except ImportError:
-        pass
+except ImportError:
+    pass
+
+HAS_API_MANAGER = False
+try:
+    from api_manager.models import GroupProfile
+    HAS_API_MANAGER = True
 except ImportError:
     pass
 
