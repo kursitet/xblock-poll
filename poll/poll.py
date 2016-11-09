@@ -31,7 +31,7 @@ import arrow
 import pkg_resources
 
 from xblock.core import XBlock
-from xblock.fields import Scope, String, Dict, List, Boolean, Integer
+from xblock.fields import Scope, String, Dict, List, Boolean, Integer, DateTime
 from xblock.fragment import Fragment
 from xblockutils.publish_event import PublishEventMixin
 from xblockutils.resources import ResourceLoader
