@@ -26,6 +26,8 @@ from collections import OrderedDict
 from django.template import Template, Context
 from markdown import markdown
 
+import arrow
+
 import pkg_resources
 
 from xblock.core import XBlock
@@ -84,6 +86,11 @@ class PollBase(XBlock, ResourceMixin, PublishEventMixin):
         default=0, help=u"Сколько раз студент отправил свои ответы.", scope=Scope.user_state
     )
     feedback = String(default='', help=u"Текст, показываемый студенту, после того, как он отправил свои ответы.")
+
+    due = DateTime(
+        default=None,
+        help=u"Время и дата окончания приема ответов - часовой пояс UTC, формат записи ISO-8601."
+    )
 
     has_score = True
     weight = 1.0
@@ -182,6 +189,11 @@ class PollBase(XBlock, ResourceMixin, PublishEventMixin):
         """
         Checks to see if the user is permitted to vote. This may not be the case if they used up their max_submissions.
         """
+        try:
+            if self.due and arrow.now() > arrow.get(self.due):
+                return False
+        except:
+            pass
         if self.max_submissions == 0:
             return True
         if self.max_submissions > self.submissions_count:
@@ -375,6 +387,7 @@ class PollBlock(PollBase):
             'feedback': self.feedback,
             'js_template': js_template,
             'max_submissions': self.max_submissions,
+            'due': arrow.get(self.due).isoformat() if self.due else '',
         })
         return self.create_fragment(
             context, "public/html/poll_edit.html",
@@ -432,7 +445,7 @@ class PollBlock(PollBase):
             self.submissions_count = 0
 
         if not self.can_vote():
-            result['errors'].append(u'Вы уже использовали максимальное количество попыток для ответа')
+            result['errors'].append(u'Прием ответов завершен.')
             return result
 
         self.clean_tally()
@@ -460,6 +473,16 @@ class PollBlock(PollBase):
 
         max_submissions = self.get_max_submissions(data, result, private_results)
 
+        due = data.get('due', '').strip()
+        try:
+            if due:
+                due = arrow.get(due).datetime
+            else:
+                due = None
+        except:
+            due = None
+            result['errors'].append(u'Неправильно задано время окончания опроса')
+
         display_name = data.get('display_name', '').strip()
         if not question:
             result['errors'].append(u"Необходимо задать вопрос.")
@@ -476,6 +499,7 @@ class PollBlock(PollBase):
         self.private_results = private_results
         self.display_name = display_name
         self.max_submissions = max_submissions
+        self.due = due
 
         # Tally will not be updated until the next attempt to use it, per
         # scoping limitations.
@@ -595,6 +619,7 @@ class SurveyBlock(PollBase):
             'js_template': js_template,
             'max_submissions': self.max_submissions,
             'multiquestion': True,
+            'due': arrow.get(self.due).isoformat() if self.due else '',
         })
         return self.create_fragment(
             context, "public/html/poll_edit.html",
@@ -823,6 +848,16 @@ class SurveyBlock(PollBase):
         answers = self.gather_items(data, result, 'Answer', 'answers', image=False)
         questions = self.gather_items(data, result, 'Question', 'questions')
 
+        due = data.get('due', '').strip()
+        try:
+            if due:
+                due = arrow.get(due).datetime
+            else:
+                due = None
+        except:
+            due = None
+            result['errors'].append(u'Неправильно задано время окончания опроса')
+
         if not result['success']:
             return result
 
@@ -832,6 +867,7 @@ class SurveyBlock(PollBase):
         self.private_results = private_results
         self.max_submissions = max_submissions
         self.block_name = block_name
+        self.due = due
 
         # Tally will not be updated until the next attempt to use it, per
         # scoping limitations.

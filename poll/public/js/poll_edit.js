@@ -223,6 +223,7 @@ function PollEditUtil(runtime, element, pollType) {
         data['question'] = $('#poll-question-editor', element).val();
         data['feedback'] = $('#poll-feedback-editor', element).val();
         data['max_submissions'] = $('#poll-max-submissions', element).val();
+        data['due'] = $('#poll-due', element).val();
         // Convert to boolean for transfer.
         data['private_results'] = eval($('#poll-private-results', element).val());
 
